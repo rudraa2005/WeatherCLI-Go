@@ -21,6 +21,7 @@ A simple command-line weather application written in Go that fetches current wea
 
 ### Local Installation
 
+
 1. Clone the repository and navigate to the project directory
 ```bash
    git clone https://github.com/rudraa2005/WeatherCLI-Go
