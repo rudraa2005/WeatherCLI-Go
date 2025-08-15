@@ -1,37 +1,45 @@
-# Weather CLI App
+# WeatherCLI-Go
 
 A simple command-line weather application written in Go that fetches current weather data for any city using the OpenWeatherMap API.
 
 ## Features
 
-- Get current weather information for any city
-- Displays temperature in Celsius
-- Shows weather description (e.g., clear sky, light rain)
-- Clean command-line interface
-- Environment variable configuration for API key security
+- Interactive city input
+- Current temperature display in Celsius
+- Weather description (e.g., clear sky, light rain)
+- Error handling for invalid cities and API issues
+- Environment variable configuration for API key
 
 ## Prerequisites
 
 - Go 1.16 or higher
-- OpenWeatherMap API key (free at [openweathermap.org](https://openweathermap.org/api))
+- OpenWeatherMap API key (free registration required)
 
 ## Installation
 
-1. Clone or download this repository
+1. Clone or download the project files
 2. Navigate to the project directory
 3. Install dependencies:
    ```bash
-   go mod init weather-app
+   go mod init WeatherCLI-Go
    go get github.com/joho/godotenv
    ```
 
 ## Setup
 
-1. Sign up for a free API key at [OpenWeatherMap](https://openweathermap.org/api)
-2. Create a `.env` file in the project root directory
-3. Add your API key to the `.env` file:
+1. Get your free API key from [OpenWeatherMap](https://openweathermap.org/api):
+   - Sign up for a free account
+   - Navigate to the API keys section
+   - Copy your API key
+
+2. Create a `.env` file in the project root directory:
+   ```bash
+   cp .env.sample .env
    ```
-   API_KEY=your_openweathermap_api_key_here
+
+3. Edit the `.env` file and replace the placeholder with your actual API key:
+   ```
+   API_KEY=your_actual_api_key_here
    ```
 
 ## Usage
@@ -41,72 +49,89 @@ A simple command-line weather application written in Go that fetches current wea
    go run main.go
    ```
 
-2. When prompted, enter the name of the city you want to check:
+2. Enter a city name when prompted:
    ```
    Enter city name: London
    ```
 
-3. The app will display the current weather:
+3. View the weather information:
    ```
-   Weather in London: 15.32°C, few clouds
+   Weather in London: 15.32°C, broken clouds
    Weather data fetched successfully.
    ```
-
-## Building
-
-To create an executable binary:
-
-```bash
-go build -o weather-app main.go
-```
-
-Then run the executable:
-```bash
-./weather-app
-```
-
-## Code Structure
-
-- `WeatherResponse`: Struct that maps the JSON response from OpenWeatherMap API
-- `getCity()`: Main function that handles user input and API communication
-- `main()`: Entry point that calls getCity() and displays completion message
-
-## API Response
-
-The application uses OpenWeatherMap's Current Weather Data API endpoint:
-```
-https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric
-```
-
-## Error Handling
-
-The application handles several error conditions:
-- Empty city name input
-- Missing or invalid `.env` file
-- Missing API key in environment variables
-- Network errors when fetching data
-- Invalid JSON response parsing
-
-## Dependencies
-
-- `github.com/joho/godotenv` - For loading environment variables from `.env` file
 
 ## Example Output
 
 ```
-Enter city name: Tokyo
-Weather in Tokyo: 22.15°C, clear sky
+Enter city name: New York
+Weather in New York: 22.15°C, clear sky
 Weather data fetched successfully.
 ```
 
-## Security Note
+## Error Handling
 
-Never commit your `.env` file or expose your API key in your code. The `.env` file should be added to your `.gitignore` file:
+The application handles various error scenarios:
 
-```gitignore
-.env
+- **Empty city name**: Prompts for valid input
+- **Invalid city name**: Returns "no weather data found" message
+- **Network issues**: Reports connection errors
+- **Invalid API key**: Returns API authentication error
+- **Missing .env file**: Application exits with error message
+
+## Project Structure
+
 ```
+WeatherCLI-Go/
+├── main.go           # Main application code
+├── .env              # Environment variables (create from .env.sample)
+├── .env.sample       # Environment variables template
+├── go.mod            # Go module file
+├── go.sum            # Go dependencies checksum
+└── README.md         # This file
+```
+
+## Dependencies
+
+- `github.com/joho/godotenv` - For loading environment variables from .env file
+
+## API Information
+
+This application uses the [OpenWeatherMap Current Weather Data API](https://openweathermap.org/current):
+- **Endpoint**: `https://api.openweathermap.org/data/2.5/weather`
+- **Units**: Metric (Celsius)
+- **Rate Limit**: 1,000 calls per day (free tier)
+
+## Building for Production
+
+To build a standalone executable:
+
+```bash
+go build -o WeatherCLI-Go main.go
+```
+
+Then run:
+```bash
+./WeatherCLI-Go
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the [MIT License](LICENSE).
+
+## Support
+
+If you encounter any issues:
+1. Verify your API key is correct and active
+2. Check your internet connection
+3. Ensure the city name is spelled correctly
+4. Check the OpenWeatherMap API status
+
+For additional help, please open an issue in the repository.
