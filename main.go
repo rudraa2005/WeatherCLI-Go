@@ -6,10 +6,18 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
-type name struct {
-	FieldName string `json:"fieldNameInJson"`
+type WeatherResponse struct {
+	CityName string `json:"name"`
+	Main     struct {
+		Temp float64 `json:"temp"`
+	} `json:"main"`
+	Weather []struct {
+		Description string `json:"description"`
+	} `json:"weather"`
 }
 
 func getCity() {
@@ -17,38 +25,43 @@ func getCity() {
 	fmt.Print("Enter city name: ")
 	scanner.Scan()
 	city := scanner.Text()
+
 	if city == "" {
 		fmt.Println("City name cannot be empty.")
 		return
 	}
-	apiKey := "2754d1e3393485b5d5e8ec6e866cb816"
-	url := "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=metric"
-	resp, err := http.Get(url)
-	defer resp.Body.Close()
 
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file:", err)
+		return
+	}
+
+	apiKey := os.Getenv("API_KEY")
+	if apiKey == "" {
+		fmt.Println("API_KEY not found in environment variables.")
+		return
+	}
+
+	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric", city, apiKey)
+	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("Error fetching weather data:", err)
 		return
 	}
+	defer resp.Body.Close()
+
 	var weatherResponse WeatherResponse
 	err = json.NewDecoder(resp.Body).Decode(&weatherResponse)
-
-	fmt.Printf("Weather in %s: %.2f°C, %s\n", weatherResponse.CityName, weatherResponse.Main.Temp, weatherResponse.Weather[0].Description)
 	if err != nil {
 		fmt.Println("Error decoding JSON response:", err)
 		return
 	}
-}
 
-type WeatherResponse struct {
-	CityName    string  `json:"name"`
-	Temperature float64 `json:"main.temp"`
-	Main        struct {
-		Temp float64 `json:"temp"`
-	} `json:"main"`
-	Weather []struct {
-		Description string `json:"description"`
-	} `json:"weather"`
+	fmt.Printf("Weather in %s: %.2f°C, %s\n",
+		weatherResponse.CityName,
+		weatherResponse.Main.Temp,
+		weatherResponse.Weather[0].Description)
 }
 
 func main() {
