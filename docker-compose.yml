@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  weathercli:
+    build: .
+    container_name: weathercli
+    stdin_open: true 
+    tty: true         
+    env_file:
+      - .env        
+    volumes:
+      - .:/app      
