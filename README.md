@@ -9,13 +9,17 @@ A simple command-line weather application written in Go that fetches current wea
 - Weather description (e.g., clear sky, light rain)
 - Error handling for invalid cities and API issues
 - Environment variable configuration for API key
+- Docker support for easy deployment
 
 ## Prerequisites
 
-- Go 1.16 or higher
+- Go 1.16 or higher (for local development)
+- Docker and Docker Compose (for containerized usage)
 - OpenWeatherMap API key (free registration required)
 
 ## Installation
+
+### Local Installation
 
 1. Clone the repository and navigate to the project directory
 ```bash
@@ -26,6 +30,14 @@ A simple command-line weather application written in Go that fetches current wea
    ```bash
    go mod init WeatherCLI-Go
    go get github.com/joho/godotenv
+   ```
+
+### Docker Installation
+
+1. Clone the repository and navigate to the project directory:
+```bash
+   git clone https://github.com/rudraa2005/WeatherCLI-Go
+   cd WeatherCLI-Go
    ```
 
 ## Setup
@@ -47,6 +59,8 @@ A simple command-line weather application written in Go that fetches current wea
 
 ## Usage
 
+### Running Locally
+
 1. Run the application:
    ```bash
    go run main.go
@@ -62,6 +76,17 @@ A simple command-line weather application written in Go that fetches current wea
    Weather in London: 15.32°C, broken clouds
    Weather data fetched successfully.
    ```
+
+### Running with Docker Compose
+
+1. Run the application using Docker Compose:
+   ```bash
+   docker compose run weathercli
+   ```
+
+2. Enter a city name when prompted and view the weather information as shown above.
+
+The Docker setup automatically handles all dependencies and environment configuration, making it perfect for quick deployment or testing without installing Go locally.
 
 ## Example Output
 
@@ -85,12 +110,14 @@ The application handles various error scenarios:
 
 ```
 WeatherCLI-Go/
-├── main.go           # Main application code
-├── .env              # Environment variables (create from .env.sample)
-├── .env.sample       # Environment variables template
-├── go.mod            # Go module file
-├── go.sum            # Go dependencies checksum
-└── README.md         # This file
+├── main.go               # Main application code
+├── Dockerfile            # Docker configuration
+├── docker-compose.yml    # Docker Compose configuration
+├── .env                  # Environment variables (create from .env.sample)
+├── .env.sample           # Environment variables template
+├── go.mod                # Go module file
+├── go.sum                # Go dependencies checksum
+└── README.md             # This file
 ```
 
 ## Dependencies
@@ -106,6 +133,8 @@ This application uses the [OpenWeatherMap Current Weather Data API](https://open
 
 ## Building for Production
 
+### Local Build
+
 To build a standalone executable:
 
 ```bash
@@ -117,12 +146,25 @@ Then run:
 ./WeatherCLI-Go
 ```
 
+### Docker Build
+
+The Docker setup handles building automatically when you run:
+```bash
+docker compose run weathercli
+```
+
+For a standalone Docker image build:
+```bash
+docker build -t weathercli-go .
+docker run -it --env-file .env weathercli-go
+```
+
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Test thoroughly (both locally and with Docker)
 5. Submit a pull request
 
 ## License
@@ -136,5 +178,6 @@ If you encounter any issues:
 2. Check your internet connection
 3. Ensure the city name is spelled correctly
 4. Check the OpenWeatherMap API status
+5. For Docker issues, ensure Docker and Docker Compose are properly installed
 
 For additional help, please open an issue in the repository.
